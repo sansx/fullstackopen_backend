@@ -7,6 +7,8 @@ app.use(cors())
 var morgan = require('morgan')
 morgan('tiny')
 
+app.use(express.static('build'))
+
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 
 app.use(express.json())
@@ -38,11 +40,6 @@ let persons = [
         "number": "2222",
         "id": 5
     },
-    {
-        "name": "123",
-        "number": "222",
-        "id": 6
-    }
 ]
 
 
