@@ -1,31 +1,48 @@
 const mongoose = require('mongoose')
 
-if ( process.argv.length<3 ) {
-   console.log('Please provide the password as an argument: node mongo.js <password>')
+if (process.argv.length < 3) {
+  console.log('Please provide the password as an argument: node mongo.js <password>')
   process.exit(1)
 }
 
 const password = process.argv[2]
+const name = process.argv[3]
+const number = process.argv[4]
 
-const url =`mongodb+srv://happyboy:${password}@cluster0.lss4u.mongodb.net/${"test"}?retryWrites=true&w=majority`
+const url = `mongodb+srv://happyboy:${password}@cluster0.lss4u.mongodb.net/${"phonebook"}?retryWrites=true&w=majority`
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
-const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
+const phonebook = new mongoose.Schema({
+  name: String,
+  number: Number
 })
 
-const Note = mongoose.model('Note', noteSchema)
+const Persons = mongoose.model('Persons', phonebook)
 
-const note = new Note({
-  content: 'HTML is Easy',
-  date: new Date(),
-  important: true,
-})
+if (name && number) {
+  const person = new Persons({
+    name,
+    number
+  })
 
-note.save().then(result => {
-  console.log('note saved!')
-  mongoose.connection.close()
-})
+  person.save().then(result => {
+    console.log(` added ${name} number ${number} to phonebook    `)
+    mongoose.connection.close()
+  })
+} else {
+  Persons.find({}).then(
+    result => {
+      result.forEach(note => {
+        console.log(note)
+      })
+      mongoose.connection.close()
+    }
+  )
+
+
+}
+
+
+
+
